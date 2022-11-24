@@ -143,11 +143,9 @@ export default function Listing() {
             <Contact userRef={listing.userRef}
             listing={listing}
             />
-           )  }
-
-           
-       
+           )  }       
         </div>
+        
         
        
        
