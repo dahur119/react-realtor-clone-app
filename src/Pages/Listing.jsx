@@ -10,40 +10,36 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { FaShare,FaMapMarkedAlt,FaBed, FaBath, FaParking, FaChair } from 'react-icons/fa';
-
+import { getAuth } from 'firebase/auth';
 
 
 // import required modules
 import { Navigation, Pagination } from "swiper";
 import { list } from '@chakra-ui/react';
+import Contact from '../Component/Contact';
 
 
 
 export default function Listing() {
+    const auth = getAuth()
     const params = useParams();
     const [listing, setListing] = useState(null);
     const [loading, setLoading] = useState(true);
     const [shareLinkCopied, setLinkedCopied] = useState(false)
+    const [contactLandLord, setContactLandlord] = useState(false)
     // SwiperCore.use([Autoplay]);
 
-    useEffect(()=>{
-        async function fetchUserListing () {
-            const docRef = doc(db, "listings", params.listingId)
-            const docSnap = await getDoc(docRef)
-            if(docSnap.exists()){
-                setListing(docSnap.data())
-                setLoading(false)
-                
-            }
-
-
-
+    useEffect(() => {
+      async function fetchListing() {
+        const docRef = doc(db, "listings", params.listingId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setListing(docSnap.data());
+          setLoading(false);
         }
-        fetchUserListing()
-        
-        
-       
-    }, [params.listingId])
+      }
+      fetchListing();
+    }, [params.listingId]);
 
     if(loading){
         return <Spinner/>
@@ -89,7 +85,7 @@ export default function Listing() {
         <p className='fixed top-[23%] right-[5%] font-semibold border-2 border-grey-400 rounded-md bg-white z-10 p-2 '>Linked copied</p>
       )}
 
-      <div className='m-4 flex flex-col md:flex-row max-w-6xl lg:mx-auto p-4 rounded-lg shadow-lg bg-white lg:space-x-5'>
+      <div className='m-4 flex flex-col md:flex-row max-w-3xl lg:mx-auto p-4 rounded-lg shadow-lg bg-white lg:space-x-5'>
         <div className='w-full'>
           <p className='text-2xl font-bold mb-3 text-blue-900'>
             {listing.name} - ${listing.offer ? 
@@ -117,7 +113,7 @@ export default function Listing() {
           </div>
           <p className='mt-3 mb-3'> <span className='font-semibold'>Description -</span> {listing.description}</p>
 
-          <ul className='flex items-center space-x-2 md:space-x-10 text-sm font-semibold'>
+          <ul className='flex items-center space-x-2 md:space-x-10 text-sm font-semibold mb-6'>
               <li className='flex items-center whitespace-nowrap'>
                 <FaBed className='text-lg mr-1'/>
                 {+listing.bedrooms > 1  ? `${listing.bedrooms} Beds` : "1Bed"}
@@ -135,7 +131,25 @@ export default function Listing() {
                 {listing.furnished ? "Furnished" : "Not furnished"}
               </li>
             </ul>
+            {listing.userRef !== auth.currentUser?.uid && !contactLandLord && (
+
+              <button 
+              onClick={()=> setContactLandlord(true)}
+
+              className='px-7 py-3 bg-blue-600 text-white font-medium text-sm uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg w-full text-center transition duration-150 ease-in-out'>Contact LandLord</button>
+
+            )}
+           {contactLandLord && (
+            <Contact userRef={listing.userRef}
+            listing={listing}
+            />
+           )  }
+
+           
+       
         </div>
+        
+       
        
       </div>
     </main>
