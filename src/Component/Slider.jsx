@@ -72,7 +72,7 @@ export default function Slider() {
                     <p className='text-[#f1faee] absolute left-1 top-3 font-medium mx-w-[90%] bg-[#457b9d] shadow-lg opacity-90 p-2 rounded-br-3xl '>{listing.data.name}</p>
                     <p className='text-[#e63946] absolute left-1 bottom-1 font-semibold mx-w-[90%] bg-[#457b9d] shadow-lg opacity-90 p-2 rounded-tr-3xl '>${listing.data.discountedPrice ?? listing.data.regularPrice }
                     {listing.data.type === "rent"  &&  " / month"}
-                    </p>
+                    </p>s
                   </SwiperSlide>
                   
                 ))}
