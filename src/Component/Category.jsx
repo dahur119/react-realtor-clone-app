@@ -101,7 +101,7 @@ export default function Category() {
       
       </>
    ) : (
-    <p>There are no current offers</p>
+    <p>{params.categoryName === "rent" ? "place for rent " : "place for sale "}</p>
 
    )}
     </div>
